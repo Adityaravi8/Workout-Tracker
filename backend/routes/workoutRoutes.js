@@ -1,29 +1,21 @@
 const express = require("express");
-const workouts = require("../models/workouts");
+const {
+  createWorkout,
+  getAllWorkouts,
+  getSingleWorkout,
+  deleteSingleWorkout,
+  updateWorkout,
+} = require("../controllers/workoutController");
 
 const workoutRouter = express.Router();
 
-workoutRouter.get("/");
+workoutRouter.get("/", getAllWorkouts);
 
-workoutRouter.get("/:id");
+workoutRouter.get("/:id", getSingleWorkout);
 
-workoutRouter.post("/", async (req, res) => {
-  const { workoutTitle, reps, weight, date } = req.body;
+workoutRouter.post("/", createWorkout);
 
-  try {
-    const workout = await workouts.create({
-      workoutTitle,
-      reps,
-      weight,
-      date: new Date(date),
-    });
-    res.status(200).json(workout);
-  } catch (error) {
-    console.log(error);
-    res.status(400).json("Unable to create workout");
-  }
-});
-
-workoutRouter.patch("/:id");
+workoutRouter.delete("/:id", deleteSingleWorkout);
+workoutRouter.patch("/:id", updateWorkout);
 
 module.exports = workoutRouter;
