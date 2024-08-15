@@ -1,9 +1,11 @@
-import Navbar from "./components/navbar";
+import React from "react";
+import AddWorkout from "./components/addWorkout";
 import ViewWorkouts from "./components/viewWorkouts";
+
 function App() {
   return (
     <div className="App">
-      <Navbar />
+      <AddWorkout />
       <ViewWorkouts />
     </div>
   );
