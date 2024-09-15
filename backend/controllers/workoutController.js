@@ -46,14 +46,17 @@ const updateWorkout = (req, res) => {
   const { id } = req.params;
 
   workouts
-    .findByIdAndUpdate(
-      { _id: id },
-      {
-        ...req.body,
+    .findByIdAndUpdate(id, req.body, { new: true, runValidators: true })
+    .then((updatedWorkout) => {
+      if (!updatedWorkout) {
+        return res.status(404).json({ error: "Workout not found" });
       }
-    )
-    .then((mssg) => res.json({ mssg: "Workout updated successfully" }))
-    .catch((err) => res.json({ err: "Unable to update workout" }));
+      res.json(workouts);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ error: "Unable to update workout" });
+    });
 };
 module.exports = {
   createWorkout,

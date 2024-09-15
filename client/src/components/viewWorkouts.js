@@ -4,14 +4,53 @@ import "./viewWorkouts.css";
 
 function ViewWorkouts() {
   const [workouts, setWorkouts] = useState([]);
+  const [editingWorkout, setEditingWorkout] = useState(null);
+  const [updatedWorkout, setUpdatedWorkout] = useState({
+    workoutTitle: "",
+    weight: "",
+    reps: "",
+    date: "",
+  });
 
   useEffect(() => {
     axios
       .get("http://localhost:4000/api/workoutRoutes/")
-      .then((res) => setWorkouts(res.data))
+      .then((res) => {
+        console.log("Fetched Workouts:", res.data);
+        setWorkouts(res.data);
+      })
       .catch((err) => console.log(err));
   }, []);
 
+  const handleUpdate = (e) => {
+    const { name, value } = e.target;
+    setUpdatedWorkout((prevWorkout) => ({
+      ...prevWorkout,
+      [name]: value,
+    }));
+  };
+
+  const updateWorkout = (e) => {
+    e.preventDefault();
+    axios
+      .patch(
+        `http://localhost:4000/api/workoutRoutes/${editingWorkout}`,
+        updatedWorkout
+      )
+      .then((res) => {
+        console.log("Update response:", res.data);
+        setWorkouts((prevWorkouts) =>
+          prevWorkouts.map((workout) =>
+            workout._id === editingWorkout ? res.data : workout
+          )
+        );
+        alert("Workout updated successfully!");
+        setEditingWorkout(null);
+      })
+      .catch((err) => {
+        console.log("Error updating workout:", err);
+      });
+  };
   const deleteWorkout = (id) => {
     axios
       .delete(`http://localhost:4000/api/workoutRoutes/${id}`)
@@ -19,6 +58,16 @@ function ViewWorkouts() {
       .catch((err) => console.log(err));
     alert("Success");
     window.location.reload(false);
+  };
+
+  const startEditingWorkout = (workout) => {
+    setEditingWorkout(workout._id);
+    setUpdatedWorkout({
+      workoutTitle: workout.workoutTitle,
+      weight: workout.weight,
+      reps: workout.reps,
+      date: workout.date,
+    });
   };
 
   return (
@@ -33,24 +82,73 @@ function ViewWorkouts() {
           </tr>
         </thead>
         <tbody>
-          {workouts.map((workouts) => (
-            <tr key={workouts._id}>
-              <td>{workouts.workoutTitle}</td>
-              <td>{workouts.weight}</td>
-              <td>{workouts.reps}</td>
-              <td>{workouts.date}</td>
+          {workouts.map((workout) => (
+            <tr key={workout._id}>
+              <td>{workout.workoutTitle}</td>
+              <td>{workout.weight}</td>
+              <td>{workout.reps}</td>
+              <td>{workout.date}</td>
               <td>
-                <button onClick={() => deleteWorkout(workouts._id)}>
+                <button onClick={() => deleteWorkout(workout._id)}>
                   Delete
                 </button>
-              </td>
-              <td>
-                <button>Update</button>
+                <button onClick={() => startEditingWorkout(workout)}>
+                  Update
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {editingWorkout && (
+        <div className="edit-form">
+          <h3>Edit Workout</h3>
+          <form onSubmit={updateWorkout}>
+            <div className="form-row">
+              <label>Workout Title</label>
+              <input
+                type="text"
+                name="workoutTitle"
+                value={updatedWorkout.workoutTitle}
+                onChange={handleUpdate}
+                required
+              />
+            </div>
+            <div className="form-row">
+              <label>Weight</label>
+              <input
+                type="number"
+                name="weight"
+                value={updatedWorkout.weight}
+                onChange={handleUpdate}
+                required
+              />
+            </div>
+            <div className="form-row">
+              <label>Reps</label>
+              <input
+                type="number"
+                name="reps"
+                value={updatedWorkout.reps}
+                onChange={handleUpdate}
+                required
+              />
+            </div>
+            <div className="form-row">
+              <label>Date</label>
+              <input
+                type="date"
+                name="date"
+                value={updatedWorkout.date}
+                onChange={handleUpdate}
+                required
+              />
+            </div>
+            <button type="submit">Update Workout</button>
+          </form>
+        </div>
+      )}
     </div>
   );
 }
