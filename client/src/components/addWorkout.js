@@ -3,11 +3,13 @@ import axios from "axios";
 import "./addWorkout.css";
 
 function AddWorkout() {
+  // Variables for setting the various details of the workouts
   const [workoutTitle, setworkoutTitle] = useState("");
   const [weight, setWeight] = useState([]);
   const [reps, setReps] = useState([]);
   const [date, setDate] = useState([]);
 
+  // Function to post a new workout into the database
   const postData = (e) => {
     e.preventDefault();
     axios
@@ -24,6 +26,7 @@ function AddWorkout() {
   };
 
   return (
+    // Form for the user to enter the workout details to send to the database
     <div>
       <div>
         <form className="form-field" onSubmit={(e) => e.preventDefault()}>

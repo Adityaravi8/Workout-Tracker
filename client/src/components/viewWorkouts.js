@@ -3,8 +3,9 @@ import axios from "axios";
 import "./viewWorkouts.css";
 
 function ViewWorkouts() {
+  // Variables for viewing workouts from database, editing workouts and to display the updated workouts
   const [workouts, setWorkouts] = useState([]);
-  const [editingWorkout, setEditingWorkout] = useState(null);
+  const [updatingWorkout, setUpdatingWorkout] = useState(null);
   const [updatedWorkout, setUpdatedWorkout] = useState({
     workoutTitle: "",
     weight: "",
@@ -12,6 +13,7 @@ function ViewWorkouts() {
     date: "",
   });
 
+  // Fetches all the workouts within the data base
   useEffect(() => {
     axios
       .get("http://localhost:4000/api/workoutRoutes/")
@@ -22,6 +24,7 @@ function ViewWorkouts() {
       .catch((err) => console.log(err));
   }, []);
 
+  // Handler for when the user clicks the save changes button when updating a workout
   const handleUpdate = (e) => {
     const { name, value } = e.target;
     setUpdatedWorkout((prevWorkout) => ({
@@ -30,27 +33,29 @@ function ViewWorkouts() {
     }));
   };
 
+  // Function to update a workout in the database
   const updateWorkout = (e) => {
     e.preventDefault();
     axios
       .patch(
-        `http://localhost:4000/api/workoutRoutes/${editingWorkout}`,
+        `http://localhost:4000/api/workoutRoutes/${updatingWorkout}`,
         updatedWorkout
       )
       .then((res) => {
         console.log("Update response:", res.data);
         setWorkouts((prevWorkouts) =>
           prevWorkouts.map((workout) =>
-            workout._id === editingWorkout ? res.data : workout
+            workout._id === updatingWorkout ? res.data : workout
           )
         );
         alert("Workout updated successfully!");
-        setEditingWorkout(null);
+        setUpdatingWorkout(null);
       })
       .catch((err) => {
         console.log("Error updating workout:", err);
       });
   };
+  // Function to delete a workout
   const deleteWorkout = (id) => {
     axios
       .delete(`http://localhost:4000/api/workoutRoutes/${id}`)
@@ -60,8 +65,9 @@ function ViewWorkouts() {
     window.location.reload(false);
   };
 
-  const startEditingWorkout = (workout) => {
-    setEditingWorkout(workout._id);
+  // Function to initiate the updating proccess for a workout
+  const startUpdatingWorkout = (workout) => {
+    setUpdatingWorkout(workout._id);
     setUpdatedWorkout({
       workoutTitle: workout.workoutTitle,
       weight: workout.weight,
@@ -71,6 +77,7 @@ function ViewWorkouts() {
   };
 
   return (
+    // Table to display the workouts in the database
     <div className="container">
       <table className="table-field">
         <thead>
@@ -92,7 +99,7 @@ function ViewWorkouts() {
                 <button onClick={() => deleteWorkout(workout._id)}>
                   Delete
                 </button>
-                <button onClick={() => startEditingWorkout(workout)}>
+                <button onClick={() => startUpdatingWorkout(workout)}>
                   Update
                 </button>
               </td>
@@ -100,8 +107,8 @@ function ViewWorkouts() {
           ))}
         </tbody>
       </table>
-
-      {editingWorkout && (
+      {/*New form for editing an existing workout when user click the update button beside a workout*/}
+      {updatingWorkout && (
         <div className="edit-form">
           <h3>Edit Workout</h3>
           <form onSubmit={updateWorkout}>
