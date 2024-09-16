@@ -66,7 +66,7 @@ function ViewWorkouts() {
       workoutTitle: workout.workoutTitle,
       weight: workout.weight,
       reps: workout.reps,
-      date: workout.date,
+      date: new Date(workout.date).toISOString().split("T")[0],
     });
   };
 

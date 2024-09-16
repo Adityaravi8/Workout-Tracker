@@ -51,7 +51,7 @@ const updateWorkout = (req, res) => {
       if (!updatedWorkout) {
         return res.status(404).json({ error: "Workout not found" });
       }
-      res.json(workouts);
+      res.json(updatedWorkout);
     })
     .catch((err) => {
       console.error(err);
