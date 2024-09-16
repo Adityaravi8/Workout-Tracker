@@ -18,7 +18,7 @@ function ViewWorkouts() {
     axios
       .get("http://localhost:4000/api/workoutRoutes/")
       .then((res) => {
-        console.log("Fetched Workouts:", res.data);
+        console.log(res.data);
         setWorkouts(res.data);
       })
       .catch((err) => console.log(err));
@@ -42,7 +42,7 @@ function ViewWorkouts() {
         updatedWorkout
       )
       .then((res) => {
-        console.log("Update response:", res.data);
+        console.log(res.data);
         setWorkouts((prevWorkouts) =>
           prevWorkouts.map((workout) =>
             workout._id === updatingWorkout ? res.data : workout
@@ -52,20 +52,20 @@ function ViewWorkouts() {
         setUpdatingWorkout(null);
       })
       .catch((err) => {
-        console.log("Error updating workout:", err);
+        console.log(err);
       });
   };
   // Function to delete a workout
   const deleteWorkout = (id) => {
     axios
       .delete(`http://localhost:4000/api/workoutRoutes/${id}`)
-      .then((res) => console.log("Successfully deleted workout"))
+      .then((res) => console.log(res))
       .catch((err) => console.log(err));
     alert("Success");
     window.location.reload(false);
   };
 
-  // Function to initiate the updating proccess for a workout
+  // Function to initiate the updating process for a workout
   const startUpdatingWorkout = (workout) => {
     setUpdatingWorkout(workout._id);
     setUpdatedWorkout({

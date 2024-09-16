@@ -19,7 +19,7 @@ function AddWorkout() {
         weight: weight,
         date: date,
       })
-      .then((res) => console.log("Success"))
+      .then((res) => console.log(res))
       .catch((err) => console.log(err));
     alert("Success");
     window.location.reload(false);
