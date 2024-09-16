@@ -1,6 +1,6 @@
 ### Workout Tracker App
 
-This full-stack application allows you to track your fitness journey with the following functionalities:
+This full-stack MERN application allows you to track your fitness journey with the following functionalities:
 
 - **Add a New Workout:** Enter details such as the workout name, weight, number of reps, and date.
 - **Delete a Workout:** Remove any existing workout from your records.
