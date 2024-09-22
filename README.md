@@ -7,8 +7,17 @@ This full-stack MERN application allows you to track your fitness journey with t
 - **Update an Existing Workout:** Modify the details of a workout that’s already been added to the database.
 - **View all workouts:** Table to view all the workouts you have done.
 
+### Prerequisites
+
+ 1. Create a mongodb cluster and copy the connection string
+ 2. Clone this repository and create a .env file within the backend folder with the following code:
+    `PORT=4000`
+    `MONGO_URI="<Enter your mongodb connection string here>"`
+
 ### How to Run
 
-This app uses docker which means all you need to do to run the entire application is by simply using the command:
+After creating the env file with the corresponding details. Simply run the command below to start the application
 
 `docker-compose up`
+
+
