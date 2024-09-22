@@ -9,6 +9,7 @@ services:
       - mongo
     volumes:
       - ./backend:/app
+      - /app/node_modules
 
   frontend:
     image: adityaravi8/workout-tracker:frontend
@@ -16,6 +17,8 @@ services:
       - "3000:3000"
     volumes:
       - ./client:/app
+      - /app/node_modules
+    command: npm start
     depends_on:
       - backend
 
