@@ -13,7 +13,7 @@ function AddWorkout() {
   const postData = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:4000/api/workoutRoutes/", {
+      .post(`${process.env.REACT_APP_API_URL}/api/workoutRoutes/`, {
         workoutTitle: workoutTitle,
         reps: reps,
         weight: weight,

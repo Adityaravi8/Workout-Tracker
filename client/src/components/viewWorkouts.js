@@ -16,7 +16,7 @@ function ViewWorkouts() {
   // Fetches all the workouts within the data base
   useEffect(() => {
     axios
-      .get("http://localhost:4000/api/workoutRoutes/")
+      .get(`${process.env.REACT_APP_API_URL}/api/workoutRoutes/`)
       .then((res) => {
         console.log(res.data);
         setWorkouts(res.data);
@@ -38,7 +38,7 @@ function ViewWorkouts() {
     e.preventDefault();
     axios
       .patch(
-        `http://localhost:4000/api/workoutRoutes/${updatingWorkout}`,
+        `${process.env.REACT_APP_API_URL}/api/workoutRoutes/${updatingWorkout}`,
         updatedWorkout
       )
       .then((res) => {
@@ -58,7 +58,7 @@ function ViewWorkouts() {
   // Function to delete a workout
   const deleteWorkout = (id) => {
     axios
-      .delete(`http://localhost:4000/api/workoutRoutes/${id}`)
+      .delete(`${process.env.REACT_APP_API_URL}/api/workoutRoutes/${id}`)
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
     alert("Success");

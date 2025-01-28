@@ -13,6 +13,7 @@ services:
 
   frontend:
     image: adityaravi8/workout-tracker:frontend
+    env_file: ./client/.env
     ports:
       - "3000:3000"
     volumes:
