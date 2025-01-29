@@ -11,7 +11,7 @@ This full-stack MERN application allows you to track your fitness journey with t
 
 1.  Create a mongodb cluster and copy the connection string
 2.  Clone this repository and create a .env file within the backend folder with the following code:
-    `PORT=4000`
+    `PORT=<Port that you want to connect to>`
     `MONGO_URI="<Enter your mongodb connection string here>"`
 3.  Create a .env file within the frontend folder as well with the following code:
     `REACT_APP_API_URL=<"Enter your host">`
