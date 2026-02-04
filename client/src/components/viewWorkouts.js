@@ -11,6 +11,9 @@ function ViewWorkouts() {
     reps: "",
     date: "",
   });
+  // Modal states
+  const [alertModal, setAlertModal] = useState({ show: false, message: "", type: "success" });
+  const [deleteConfirm, setDeleteConfirm] = useState({ show: false, workoutId: null });
 
   useEffect(() => {
     axios
@@ -33,6 +36,10 @@ function ViewWorkouts() {
     }));
   };
 
+  const showAlert = (message, type = "success") => {
+    setAlertModal({ show: true, message, type });
+  };
+
   const updateWorkout = (e) => {
     e.preventDefault();
     axios
@@ -46,30 +53,34 @@ function ViewWorkouts() {
             workout._id === updatingWorkout ? res.data : workout
           )
         );
-        alert("Workout updated successfully!");
         setUpdatingWorkout(null);
+        showAlert("Workout updated successfully!", "success");
       })
       .catch((err) => {
         console.log(err);
-        alert("Failed to update workout. Please try again.");
+        showAlert("Failed to update workout. Please try again.", "error");
       });
   };
 
-  const deleteWorkout = (id) => {
-    if (!window.confirm("Are you sure you want to delete this workout?")) {
-      return;
-    }
+  const handleDeleteClick = (id) => {
+    setDeleteConfirm({ show: true, workoutId: id });
+  };
+
+  const confirmDelete = () => {
+    const id = deleteConfirm.workoutId;
+    setDeleteConfirm({ show: false, workoutId: null });
+
     axios
       .delete(`${process.env.REACT_APP_API_URL || ""}/api/workouts/${id}`)
       .then(() => {
         setWorkouts((prevWorkouts) =>
           prevWorkouts.filter((workout) => workout._id !== id)
         );
-        alert("Workout deleted successfully!");
+        showAlert("Workout deleted successfully!", "success");
       })
       .catch((err) => {
         console.log(err);
-        alert("Failed to delete workout. Please try again.");
+        showAlert("Failed to delete workout. Please try again.", "error");
       });
   };
 
@@ -230,7 +241,7 @@ function ViewWorkouts() {
                             </svg>
                           </button>
                           <button
-                            onClick={() => deleteWorkout(workout._id)}
+                            onClick={() => handleDeleteClick(workout._id)}
                             className="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                             title="Delete workout"
                           >
@@ -292,7 +303,7 @@ function ViewWorkouts() {
                         </svg>
                       </button>
                       <button
-                        onClick={() => deleteWorkout(workout._id)}
+                        onClick={() => handleDeleteClick(workout._id)}
                         className="p-2 text-slate-500 hover:text-red-600 hover:bg-white rounded-lg transition-colors"
                       >
                         <svg
@@ -325,6 +336,84 @@ function ViewWorkouts() {
           </>
         )}
       </div>
+
+      {/* Alert Modal */}
+      {alertModal.show && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex min-h-screen items-center justify-center p-4">
+            <div
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+              onClick={() => setAlertModal({ ...alertModal, show: false })}
+            />
+            <div className="relative bg-white rounded-xl shadow-modal w-full max-w-sm p-6 text-center">
+              <div className={`mx-auto w-12 h-12 rounded-full flex items-center justify-center mb-4 ${
+                alertModal.type === "success" ? "bg-green-100" : "bg-red-100"
+              }`}>
+                {alertModal.type === "success" ? (
+                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                )}
+              </div>
+              <h3 className={`text-lg font-semibold mb-2 ${
+                alertModal.type === "success" ? "text-green-800" : "text-red-800"
+              }`}>
+                {alertModal.type === "success" ? "Success" : "Error"}
+              </h3>
+              <p className="text-slate-600 mb-6">{alertModal.message}</p>
+              <button
+                onClick={() => setAlertModal({ ...alertModal, show: false })}
+                className={`w-full py-2.5 px-4 rounded-lg font-medium text-white transition-colors ${
+                  alertModal.type === "success"
+                    ? "bg-green-600 hover:bg-green-700"
+                    : "bg-red-600 hover:bg-red-700"
+                }`}
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm.show && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex min-h-screen items-center justify-center p-4">
+            <div
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+              onClick={() => setDeleteConfirm({ show: false, workoutId: null })}
+            />
+            <div className="relative bg-white rounded-xl shadow-modal w-full max-w-sm p-6 text-center">
+              <div className="mx-auto w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">Delete Workout</h3>
+              <p className="text-slate-600 mb-6">Are you sure you want to delete this workout? This action cannot be undone.</p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setDeleteConfirm({ show: false, workoutId: null })}
+                  className="flex-1 py-2.5 px-4 rounded-lg font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmDelete}
+                  className="flex-1 py-2.5 px-4 rounded-lg font-medium text-white bg-red-600 hover:bg-red-700 transition-colors"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Edit Modal */}
       {updatingWorkout && (
