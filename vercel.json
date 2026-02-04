@@ -3,7 +3,7 @@
   "buildCommand": "npm install --prefix client && npm run build --prefix client",
   "outputDirectory": "client/build",
   "routes": [
-    { "src": "/api/workouts/([^/]+)", "dest": "/api/workouts/[id].js" },
+    { "src": "/api/workouts/([^/]+)", "dest": "/api/workouts/[id].js?id=$1" },
     { "src": "/api/workouts/?$", "dest": "/api/workouts/index.js" },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
