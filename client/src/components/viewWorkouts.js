@@ -14,7 +14,7 @@ function ViewWorkouts() {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/workoutRoutes/`)
+      .get(`${process.env.REACT_APP_API_URL || ""}/api/workouts`)
       .then((res) => {
         setWorkouts(res.data);
         setIsLoading(false);
@@ -37,7 +37,7 @@ function ViewWorkouts() {
     e.preventDefault();
     axios
       .patch(
-        `${process.env.REACT_APP_API_URL}/api/workoutRoutes/${updatingWorkout}`,
+        `${process.env.REACT_APP_API_URL || ""}/api/workouts/${updatingWorkout}`,
         updatedWorkout
       )
       .then((res) => {
@@ -60,7 +60,7 @@ function ViewWorkouts() {
       return;
     }
     axios
-      .delete(`${process.env.REACT_APP_API_URL}/api/workoutRoutes/${id}`)
+      .delete(`${process.env.REACT_APP_API_URL || ""}/api/workouts/${id}`)
       .then(() => {
         setWorkouts((prevWorkouts) =>
           prevWorkouts.filter((workout) => workout._id !== id)

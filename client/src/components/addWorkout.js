@@ -13,7 +13,7 @@ function AddWorkout() {
     setIsLoading(true);
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/workoutRoutes/`, {
+      await axios.post(`${process.env.REACT_APP_API_URL || ""}/api/workouts`, {
         workoutTitle: workoutTitle,
         reps: reps,
         weight: weight,
