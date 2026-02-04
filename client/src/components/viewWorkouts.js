@@ -11,7 +11,6 @@ function ViewWorkouts() {
     reps: "",
     date: "",
   });
-  // Modal states
   const [alertModal, setAlertModal] = useState({ show: false, message: "", type: "success" });
   const [deleteConfirm, setDeleteConfirm] = useState({ show: false, workoutId: null });
 
@@ -101,7 +100,6 @@ function ViewWorkouts() {
 
   return (
     <div className="card">
-      {/* Card Header */}
       <div className="px-6 py-4 border-b border-slate-200 bg-slate-50">
         <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
           <svg
@@ -121,7 +119,6 @@ function ViewWorkouts() {
         </h2>
       </div>
 
-      {/* Card Body */}
       <div className="p-6">
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
@@ -170,7 +167,6 @@ function ViewWorkouts() {
           </div>
         ) : (
           <>
-            {/* Desktop Table View */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -264,7 +260,6 @@ function ViewWorkouts() {
               </table>
             </div>
 
-            {/* Mobile Card View */}
             <div className="md:hidden space-y-4">
               {workouts.map((workout) => (
                 <div
@@ -334,7 +329,6 @@ function ViewWorkouts() {
         )}
       </div>
 
-      {/* Alert Modal */}
       {alertModal.show && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-screen items-center justify-center p-4">
@@ -377,7 +371,6 @@ function ViewWorkouts() {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
       {deleteConfirm.show && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-screen items-center justify-center p-4">
@@ -412,17 +405,14 @@ function ViewWorkouts() {
         </div>
       )}
 
-      {/* Edit Modal */}
       {updatingWorkout && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-screen items-center justify-center p-4">
-            {/* Backdrop */}
             <div
               className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
               onClick={() => setUpdatingWorkout(null)}
             />
 
-            {/* Modal */}
             <div className="relative bg-white rounded-xl shadow-modal w-full max-w-md p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-slate-900">

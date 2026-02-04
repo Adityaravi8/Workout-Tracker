@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const { signToken } = require("../lib/authMiddleware");
 
 module.exports = async function handler(req, res) {
-  // Enable CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -26,19 +25,16 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: "Email and password are required" });
     }
 
-    // Find user by email
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    // Compare password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    // Generate token
     const token = signToken(user._id);
 
     return res.status(200).json({

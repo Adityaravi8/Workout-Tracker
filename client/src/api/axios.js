@@ -4,7 +4,6 @@ const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || "",
 });
 
-// Add request interceptor to attach JWT token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -18,7 +17,6 @@ api.interceptors.request.use(
   }
 );
 
-// Add response interceptor to handle 401 errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {

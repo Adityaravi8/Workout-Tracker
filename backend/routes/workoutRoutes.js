@@ -9,7 +9,6 @@ const {
 
 const workoutRouter = express.Router();
 
-// Routers
 workoutRouter.get("/", getAllWorkouts);
 
 workoutRouter.get("/:id", getSingleWorkout);

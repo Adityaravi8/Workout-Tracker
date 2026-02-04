@@ -3,7 +3,6 @@ const Workout = require("../lib/workoutModel");
 const { verifyToken } = require("../lib/authMiddleware");
 
 module.exports = async function handler(req, res) {
-  // Enable CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -12,7 +11,6 @@ module.exports = async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // Verify authentication
   const authResult = verifyToken(req);
   if (authResult.error) {
     return res.status(authResult.status).json({ error: authResult.error });

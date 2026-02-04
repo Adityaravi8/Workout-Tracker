@@ -31,7 +31,6 @@ function AddWorkout() {
 
   return (
     <div className="card">
-      {/* Card Header */}
       <div className="px-6 py-4 border-b border-slate-200 bg-slate-50">
         <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
           <svg
@@ -51,11 +50,9 @@ function AddWorkout() {
         </h2>
       </div>
 
-      {/* Card Body */}
       <div className="p-6">
         <form onSubmit={postData}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Workout Name */}
             <div>
               <label htmlFor="workoutTitle" className="label">
                 Workout Name
@@ -71,7 +68,6 @@ function AddWorkout() {
               />
             </div>
 
-            {/* Weight */}
             <div>
               <label htmlFor="weight" className="label">
                 Weight (lbs)
@@ -87,7 +83,6 @@ function AddWorkout() {
               />
             </div>
 
-            {/* Reps */}
             <div>
               <label htmlFor="reps" className="label">
                 Number of Reps
@@ -103,7 +98,6 @@ function AddWorkout() {
               />
             </div>
 
-            {/* Date */}
             <div>
               <label htmlFor="date" className="label">
                 Date
@@ -119,7 +113,6 @@ function AddWorkout() {
             </div>
           </div>
 
-          {/* Submit Button */}
           <div className="mt-6">
             <button
               type="submit"

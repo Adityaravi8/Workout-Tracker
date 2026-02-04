@@ -1,6 +1,5 @@
 const workouts = require("../models/workouts");
 
-// Function to create a workout
 const createWorkout = async (req, res) => {
   const { workoutTitle, reps, weight, date } = req.body;
 
@@ -17,7 +16,7 @@ const createWorkout = async (req, res) => {
     res.status(400).json({ err: "Unable to create workout" });
   }
 };
-// Function to fetch all workouts from database
+
 const getAllWorkouts = (req, res) => {
   workouts
     .find()
@@ -25,7 +24,6 @@ const getAllWorkouts = (req, res) => {
     .catch((err) => res.json({ err: "Workout does not exist" }));
 };
 
-// Function to fetch a single workout
 const getSingleWorkout = (req, res) => {
   const { id } = req.params;
 
@@ -35,7 +33,6 @@ const getSingleWorkout = (req, res) => {
     .catch((err) => res.json({ err: "Workout does not exist" }));
 };
 
-// Function to delete a single workout
 const deleteSingleWorkout = (req, res) => {
   const { id } = req.params;
 
@@ -44,7 +41,7 @@ const deleteSingleWorkout = (req, res) => {
     .then((mssg) => res.json({ mssg: "Workout deleted successfully" }))
     .catch((err) => res.json({ err: "Unable to delete workout" }));
 };
-// Function to update an existing workout
+
 const updateWorkout = (req, res) => {
   const { id } = req.params;
 

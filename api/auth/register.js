@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const { signToken } = require("../lib/authMiddleware");
 
 module.exports = async function handler(req, res) {
-  // Enable CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -22,33 +21,27 @@ module.exports = async function handler(req, res) {
   try {
     const { email, password } = req.body;
 
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
       return res.status(400).json({ error: "Valid email is required" });
     }
 
-    // Validate password length
     if (!password || password.length < 6) {
       return res.status(400).json({ error: "Password must be at least 6 characters" });
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       return res.status(400).json({ error: "Email already registered" });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user
     const user = await User.create({
       email: email.toLowerCase(),
       password: hashedPassword,
     });
 
-    // Generate token
     const token = signToken(user._id);
 
     return res.status(201).json({
