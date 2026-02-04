@@ -1,23 +1,30 @@
 const connectDB = require("../lib/mongodb");
 const Workout = require("../lib/workoutModel");
+const { verifyToken } = require("../lib/authMiddleware");
 
 module.exports = async function handler(req, res) {
-  await connectDB();
-
   const { id } = req.query;
 
   // Enable CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, DELETE, PATCH, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
 
+  // Verify authentication
+  const authResult = verifyToken(req);
+  if (authResult.error) {
+    return res.status(authResult.status).json({ error: authResult.error });
+  }
+
+  await connectDB();
+
   if (req.method === "GET") {
     try {
-      const workout = await Workout.findById(id);
+      const workout = await Workout.findOne({ _id: id, userId: authResult.userId });
       if (!workout) {
         return res.status(404).json({ error: "Workout not found" });
       }
@@ -29,7 +36,7 @@ module.exports = async function handler(req, res) {
 
   if (req.method === "DELETE") {
     try {
-      const workout = await Workout.findByIdAndDelete(id);
+      const workout = await Workout.findOneAndDelete({ _id: id, userId: authResult.userId });
       if (!workout) {
         return res.status(404).json({ error: "Workout not found" });
       }
@@ -41,10 +48,11 @@ module.exports = async function handler(req, res) {
 
   if (req.method === "PATCH") {
     try {
-      const workout = await Workout.findByIdAndUpdate(id, req.body, {
-        new: true,
-        runValidators: true,
-      });
+      const workout = await Workout.findOneAndUpdate(
+        { _id: id, userId: authResult.userId },
+        req.body,
+        { new: true, runValidators: true }
+      );
       if (!workout) {
         return res.status(404).json({ error: "Workout not found" });
       }

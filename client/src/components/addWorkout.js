@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../api/axios";
 
 function AddWorkout() {
   const [workoutTitle, setworkoutTitle] = useState("");
@@ -13,7 +13,7 @@ function AddWorkout() {
     setIsLoading(true);
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL || ""}/api/workouts`, {
+      await api.post("/api/workouts", {
         workoutTitle: workoutTitle,
         reps: reps,
         weight: weight,

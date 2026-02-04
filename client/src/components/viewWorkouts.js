@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api/axios";
 
 function ViewWorkouts() {
   const [workouts, setWorkouts] = useState([]);
@@ -16,8 +16,8 @@ function ViewWorkouts() {
   const [deleteConfirm, setDeleteConfirm] = useState({ show: false, workoutId: null });
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL || ""}/api/workouts`)
+    api
+      .get("/api/workouts")
       .then((res) => {
         setWorkouts(res.data);
         setIsLoading(false);
@@ -42,11 +42,8 @@ function ViewWorkouts() {
 
   const updateWorkout = (e) => {
     e.preventDefault();
-    axios
-      .patch(
-        `${process.env.REACT_APP_API_URL || ""}/api/workouts/${updatingWorkout}`,
-        updatedWorkout
-      )
+    api
+      .patch(`/api/workouts/${updatingWorkout}`, updatedWorkout)
       .then((res) => {
         setWorkouts((prevWorkouts) =>
           prevWorkouts.map((workout) =>
@@ -70,8 +67,8 @@ function ViewWorkouts() {
     const id = deleteConfirm.workoutId;
     setDeleteConfirm({ show: false, workoutId: null });
 
-    axios
-      .delete(`${process.env.REACT_APP_API_URL || ""}/api/workouts/${id}`)
+    api
+      .delete(`/api/workouts/${id}`)
       .then(() => {
         setWorkouts((prevWorkouts) =>
           prevWorkouts.filter((workout) => workout._id !== id)
