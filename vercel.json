@@ -2,12 +2,18 @@
   "framework": "create-react-app",
   "buildCommand": "npm install --prefix client && npm run build --prefix client",
   "outputDirectory": "client/build",
-  "routes": [
-    { "src": "/api/workouts/([^/]+)", "dest": "/api/workouts/[id].js" },
-    { "src": "/api/workouts", "dest": "/api/workouts/index.js" },
-    { "src": "/api/(.*)", "dest": "/api/$1" }
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, PATCH, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
+      ]
+    }
   ],
   "rewrites": [
+    { "source": "/api/workouts/:id", "destination": "/api/workouts/[id]" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
