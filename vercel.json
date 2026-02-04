@@ -1,5 +1,6 @@
 {
-  "buildCommand": "cd client && npm install && npm run build",
+  "framework": "create-react-app",
+  "buildCommand": "npm install --prefix client && npm run build --prefix client",
   "outputDirectory": "client/build",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
