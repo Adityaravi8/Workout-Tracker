@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import AddWorkout from "./components/addWorkout";
 import ViewWorkouts from "./components/viewWorkouts";
@@ -9,6 +9,11 @@ import { useAuth } from "./context/AuthContext";
 
 function Dashboard() {
   const { logout, user } = useAuth();
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const handleWorkoutAdded = () => {
+    setRefreshKey((prev) => prev + 1);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -65,8 +70,8 @@ function Dashboard() {
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-8">
-          <AddWorkout />
-          <ViewWorkouts />
+          <AddWorkout onWorkoutAdded={handleWorkoutAdded} />
+          <ViewWorkouts key={refreshKey} />
         </div>
       </main>
     </div>

@@ -21,7 +21,7 @@ export function AuthProvider({ children }) {
 
       const verifyResponse = await api.get("/api/auth/verify");
       setUser(verifyResponse.data.user);
-    } catch (err) {
+    } catch {
       clearTokens();
       setUser(null);
     } finally {

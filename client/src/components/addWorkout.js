@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import api from "../api/axios";
 
-function AddWorkout() {
+function AddWorkout({ onWorkoutAdded }) {
   const [workoutTitle, setworkoutTitle] = useState("");
   const [weight, setWeight] = useState("");
   const [reps, setReps] = useState("");
   const [date, setDate] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [alertModal, setAlertModal] = useState({ show: false, message: "", type: "success" });
+
+  const showAlert = (message, type = "success") => {
+    setAlertModal({ show: true, message, type });
+  };
 
   const postData = async (e) => {
     e.preventDefault();
@@ -19,11 +24,15 @@ function AddWorkout() {
         weight: weight,
         date: date,
       });
-      alert("Workout added successfully!");
-      window.location.reload(false);
+      showAlert("Workout added successfully!", "success");
+      setworkoutTitle("");
+      setWeight("");
+      setReps("");
+      setDate("");
+      if (onWorkoutAdded) onWorkoutAdded();
     } catch (err) {
       console.log(err);
-      alert("Failed to add workout. Please try again.");
+      showAlert("Failed to add workout. Please try again.", "error");
     } finally {
       setIsLoading(false);
     }
@@ -164,6 +173,48 @@ function AddWorkout() {
           </div>
         </form>
       </div>
+
+      {alertModal.show && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex min-h-screen items-center justify-center p-4">
+            <div
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+              onClick={() => setAlertModal({ ...alertModal, show: false })}
+            />
+            <div className="relative bg-white rounded-xl shadow-modal w-full max-w-sm p-6 text-center">
+              <div className={`mx-auto w-12 h-12 rounded-full flex items-center justify-center mb-4 ${
+                alertModal.type === "success" ? "bg-green-100" : "bg-red-100"
+              }`}>
+                {alertModal.type === "success" ? (
+                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                )}
+              </div>
+              <h3 className={`text-lg font-semibold mb-2 ${
+                alertModal.type === "success" ? "text-green-800" : "text-red-800"
+              }`}>
+                {alertModal.type === "success" ? "Success" : "Error"}
+              </h3>
+              <p className="text-slate-600 mb-6">{alertModal.message}</p>
+              <button
+                onClick={() => setAlertModal({ ...alertModal, show: false })}
+                className={`w-full py-2.5 px-4 rounded-lg font-medium text-white transition-colors ${
+                  alertModal.type === "success"
+                    ? "bg-green-600 hover:bg-green-700"
+                    : "bg-red-600 hover:bg-red-700"
+                }`}
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
