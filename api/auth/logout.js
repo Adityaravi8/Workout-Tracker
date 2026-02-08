@@ -1,10 +1,10 @@
-const connectDB = require("../../lib/mongodb");
-const RefreshToken = require("../../lib/refreshTokenModel");
-const { setSecurityHeaders } = require("../../lib/securityHeaders");
+const connectDB = require("../lib/mongodb");
+const RefreshToken = require("../lib/refreshTokenModel");
+const { setSecurityHeaders } = require("../lib/securityHeaders");
 const {
   getRefreshToken,
   clearRefreshTokenCookie,
-} = require("../../lib/cookieUtils");
+} = require("../lib/cookieUtils");
 const crypto = require("crypto");
 
 module.exports = async function handler(req, res) {
