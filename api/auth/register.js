@@ -1,6 +1,6 @@
-const connectDB = require("../lib/mongodb");
-const User = require("../lib/userModel");
-const RefreshToken = require("../lib/refreshTokenModel");
+const connectDB = require("../_lib/mongodb");
+const User = require("../_lib/userModel");
+const RefreshToken = require("../_lib/refreshTokenModel");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const {
@@ -8,10 +8,10 @@ const {
   generateRefreshToken,
   generateTokenFamily,
   REFRESH_TOKEN_EXPIRY_DAYS,
-} = require("../lib/authMiddleware");
-const { setSecurityHeaders } = require("../lib/securityHeaders");
-const { setRefreshTokenCookie } = require("../lib/cookieUtils");
-const { checkRateLimit, getClientIp } = require("../lib/rateLimiter");
+} = require("../_lib/authMiddleware");
+const { setSecurityHeaders } = require("../_lib/securityHeaders");
+const { setRefreshTokenCookie } = require("../_lib/cookieUtils");
+const { checkRateLimit, getClientIp } = require("../_lib/rateLimiter");
 
 const REGISTER_RATE_LIMIT = 3;
 const REGISTER_RATE_WINDOW_MS = 60 * 60 * 1000;

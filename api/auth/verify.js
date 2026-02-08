@@ -1,7 +1,7 @@
-const connectDB = require("../lib/mongodb");
-const User = require("../lib/userModel");
-const { verifyToken } = require("../lib/authMiddleware");
-const { setSecurityHeaders } = require("../lib/securityHeaders");
+const connectDB = require("../_lib/mongodb");
+const User = require("../_lib/userModel");
+const { verifyToken } = require("../_lib/authMiddleware");
+const { setSecurityHeaders } = require("../_lib/securityHeaders");
 
 module.exports = async function handler(req, res) {
   setSecurityHeaders(res, "GET, OPTIONS");

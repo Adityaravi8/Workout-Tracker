@@ -1,8 +1,8 @@
-const connectDB = require("../lib/mongodb");
-const Workout = require("../lib/workoutModel");
-const { verifyToken } = require("../lib/authMiddleware");
-const { setSecurityHeaders } = require("../lib/securityHeaders");
-const { verifyCsrfToken } = require("../lib/csrfUtils");
+const connectDB = require("../_lib/mongodb");
+const Workout = require("../_lib/workoutModel");
+const { verifyToken } = require("../_lib/authMiddleware");
+const { setSecurityHeaders } = require("../_lib/securityHeaders");
+const { verifyCsrfToken } = require("../_lib/csrfUtils");
 
 module.exports = async function handler(req, res) {
   const { id } = req.query;

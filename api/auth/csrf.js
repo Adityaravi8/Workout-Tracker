@@ -1,6 +1,6 @@
-const { setSecurityHeaders } = require("../lib/securityHeaders");
-const { verifyToken } = require("../lib/authMiddleware");
-const { generateCsrfToken } = require("../lib/csrfUtils");
+const { setSecurityHeaders } = require("../_lib/securityHeaders");
+const { verifyToken } = require("../_lib/authMiddleware");
+const { generateCsrfToken } = require("../_lib/csrfUtils");
 
 module.exports = async function handler(req, res) {
   setSecurityHeaders(res, "GET, OPTIONS");
