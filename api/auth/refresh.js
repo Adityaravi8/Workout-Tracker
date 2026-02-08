@@ -1,15 +1,15 @@
-const connectDB = require("../lib/mongodb");
-const RefreshToken = require("../lib/refreshTokenModel");
-const { setSecurityHeaders } = require("../lib/securityHeaders");
+const connectDB = require("../../lib/mongodb");
+const RefreshToken = require("../../lib/refreshTokenModel");
+const { setSecurityHeaders } = require("../../lib/securityHeaders");
 const {
   getRefreshToken,
   setRefreshTokenCookie,
-} = require("../lib/cookieUtils");
+} = require("../../lib/cookieUtils");
 const {
   signAccessToken,
   generateRefreshToken,
   REFRESH_SECRET,
-} = require("../lib/authMiddleware");
+} = require("../../lib/authMiddleware");
 const crypto = require("crypto");
 
 module.exports = async function handler(req, res) {

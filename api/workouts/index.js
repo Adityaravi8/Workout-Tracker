@@ -1,8 +1,8 @@
-const connectDB = require("../lib/mongodb");
-const Workout = require("../lib/workoutModel");
-const { verifyToken } = require("../lib/authMiddleware");
-const { setSecurityHeaders } = require("../lib/securityHeaders");
-const { verifyCsrfToken } = require("../lib/csrfUtils");
+const connectDB = require("../../lib/mongodb");
+const Workout = require("../../lib/workoutModel");
+const { verifyToken } = require("../../lib/authMiddleware");
+const { setSecurityHeaders } = require("../../lib/securityHeaders");
+const { verifyCsrfToken } = require("../../lib/csrfUtils");
 
 module.exports = async function handler(req, res) {
   setSecurityHeaders(res, "GET, POST, OPTIONS");
