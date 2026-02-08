@@ -1,34 +1,28 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-import api from "../api/axios";
+import api, { setAccessToken, clearTokens, getAccessToken } from "../api/axios";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("token"));
   const [loading, setLoading] = useState(true);
 
-  const isAuthenticated = !!token && !!user;
+  const isAuthenticated = !!user && !!getAccessToken();
 
   useEffect(() => {
     checkAuth();
   }, []);
 
   const checkAuth = async () => {
-    const storedToken = localStorage.getItem("token");
-    if (!storedToken) {
-      setLoading(false);
-      return;
-    }
-
     try {
-      const response = await api.get("/api/auth/verify");
-      setUser(response.data.user);
-      setToken(storedToken);
+      const response = await api.post("/api/auth/refresh");
+      const { accessToken } = response.data;
+      setAccessToken(accessToken);
+
+      const verifyResponse = await api.get("/api/auth/verify");
+      setUser(verifyResponse.data.user);
     } catch (err) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      setToken(null);
+      clearTokens();
       setUser(null);
     } finally {
       setLoading(false);
@@ -37,11 +31,9 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const response = await api.post("/api/auth/login", { email, password });
-    const { token: newToken, user: userData } = response.data;
+    const { accessToken, user: userData } = response.data;
 
-    localStorage.setItem("token", newToken);
-    localStorage.setItem("user", JSON.stringify(userData));
-    setToken(newToken);
+    setAccessToken(accessToken);
     setUser(userData);
 
     return response.data;
@@ -49,28 +41,29 @@ export function AuthProvider({ children }) {
 
   const signup = async (email, password) => {
     const response = await api.post("/api/auth/register", { email, password });
-    const { token: newToken, user: userData } = response.data;
+    const { accessToken, user: userData } = response.data;
 
-    localStorage.setItem("token", newToken);
-    localStorage.setItem("user", JSON.stringify(userData));
-    setToken(newToken);
+    setAccessToken(accessToken);
     setUser(userData);
 
     return response.data;
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setToken(null);
-    setUser(null);
+  const logout = async () => {
+    try {
+      await api.post("/api/auth/logout");
+    } catch (err) {
+      console.error("Logout error:", err);
+    } finally {
+      clearTokens();
+      setUser(null);
+    }
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        token,
         isAuthenticated,
         loading,
         login,

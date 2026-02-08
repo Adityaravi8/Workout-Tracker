@@ -1,11 +1,11 @@
 const connectDB = require("../lib/mongodb");
 const Workout = require("../lib/workoutModel");
 const { verifyToken } = require("../lib/authMiddleware");
+const { setSecurityHeaders } = require("../lib/securityHeaders");
+const { verifyCsrfToken } = require("../lib/csrfUtils");
 
 module.exports = async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  setSecurityHeaders(res, "GET, POST, OPTIONS");
 
   if (req.method === "OPTIONS") {
     return res.status(200).end();
@@ -20,7 +20,9 @@ module.exports = async function handler(req, res) {
 
   if (req.method === "GET") {
     try {
-      const workouts = await Workout.find({ userId: authResult.userId }).sort({ date: -1 });
+      const workouts = await Workout.find({ userId: authResult.userId }).sort({
+        date: -1,
+      });
       return res.status(200).json(workouts);
     } catch (err) {
       return res.status(500).json({ error: "Failed to fetch workouts" });
@@ -28,6 +30,11 @@ module.exports = async function handler(req, res) {
   }
 
   if (req.method === "POST") {
+    const csrfToken = req.headers["x-csrf-token"];
+    if (!verifyCsrfToken(csrfToken, authResult.userId)) {
+      return res.status(403).json({ error: "Invalid CSRF token" });
+    }
+
     try {
       const { workoutTitle, reps, weight, date } = req.body;
       const workout = await Workout.create({
