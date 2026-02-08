@@ -105,7 +105,8 @@ api.interceptors.response.use(
     ) {
       if (
         originalRequest.url.includes("/api/auth/login") ||
-        originalRequest.url.includes("/api/auth/register")
+        originalRequest.url.includes("/api/auth/register") ||
+        originalRequest.url.includes("/api/auth/refresh")
       ) {
         return Promise.reject(error);
       }
@@ -143,7 +144,13 @@ api.interceptors.response.use(
         onRefreshFailed(refreshError);
 
         clearTokens();
-        window.location.href = "/login";
+
+        if (
+          !window.location.pathname.includes("/login") &&
+          !window.location.pathname.includes("/register")
+        ) {
+          window.location.href = "/login";
+        }
         return Promise.reject(refreshError);
       }
     }
